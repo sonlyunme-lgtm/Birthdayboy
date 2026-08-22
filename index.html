@@ -1199,6 +1199,291 @@ img {
 }
 
 
+
+/* =====================================================
+   MINI GAMES
+===================================================== */
+
+function goToMiniGames() {
+  animateSlides(currentSlide, 11);
+}
+
+
+const quizData = [
+  {
+    q: 'Makanan favorit aku apa?',
+    a: ['Bakso', 'Seblak', 'Sushi', 'Mie Ayam'],
+    correct: 1
+  },
+  {
+    q: 'Minuman kesukaan aku?',
+    a: ['Matcha', 'Kopi', 'Cokelat', 'Teh Manis'],
+    correct: 0
+  },
+  {
+    q: 'Warna kesukaan aku?',
+    a: ['Biru', 'Ungu', 'Pink', 'Hitam'],
+    correct: 2
+  },
+  {
+    q: 'Hewan kesukaan aku?',
+    a: ['Kelinci', 'Kucing', 'Hamster', 'Anjing'],
+    correct: 1
+  },
+  {
+    q: 'Hobi aku apa?',
+    a: ['Memasak', 'Menggambar', 'Menyanyi', 'Olahraga'],
+    correct: 1
+  },
+  {
+    q: 'Aku paling suka dipanggil...',
+    a: ['Sayang', 'Bby', 'Baby', 'Cantik'],
+    correct: 2
+  },
+  {
+    q: 'Kalau lagi santai, kebiasaan aku...',
+    a: ['Scroll TikTok', 'Tidur', 'Main game', 'Baca buku'],
+    correct: 0
+  },
+  {
+    q: 'Hal yang aku suka dari kamu adalah...',
+    a: ['Senyummu', 'Perhatianmu', 'Cara kamu ngobrol', 'Semuanya benar 💙'],
+    correct: 3
+  },
+  {
+    q: 'Hal yang paling aku nggak suka dari kamu?',
+    a: ['Lupa chat', 'Ngomong kasar', 'Main game', 'Terlalu lama tidur'],
+    correct: 1
+  },
+  {
+    q: 'Hero Mobile Legends favorit aku?',
+    a: ['Xavier', 'Layla', 'Miya', 'Gusion'],
+    correct: 0
+  }
+];
+
+let quizIndex = 0;
+let quizScore = 0;
+let quizLocked = false;
+
+function startQuiz() {
+  quizIndex = 0;
+  quizScore = 0;
+  quizLocked = false;
+  const result = document.getElementById('quizResult');
+  if (result) result.style.display = 'none';
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+  const q = quizData[quizIndex];
+  const progress = document.getElementById('quizProgress');
+  const question = document.getElementById('quizQuestion');
+  const options = document.getElementById('quizOptions');
+  const feedback = document.getElementById('quizFeedback');
+
+  quizLocked = false;
+  progress.innerText = `Pertanyaan ${quizIndex + 1} / ${quizData.length}`;
+  question.innerText = q.q;
+  feedback.innerText = '';
+  options.innerHTML = '';
+
+  q.a.forEach((text, i) => {
+    const button = document.createElement('button');
+    button.className = 'quiz-option';
+    button.innerText = `${String.fromCharCode(65 + i)}. ${text}`;
+    button.onclick = () => answerQuiz(i, button);
+    options.appendChild(button);
+  });
+}
+
+function answerQuiz(selected, selectedButton) {
+  if (quizLocked) return;
+  quizLocked = true;
+
+  const q = quizData[quizIndex];
+  const buttons = document.querySelectorAll('#quizOptions .quiz-option');
+  buttons.forEach((button, i) => {
+    button.disabled = true;
+    if (i === q.correct) button.classList.add('correct');
+  });
+
+  const feedback = document.getElementById('quizFeedback');
+
+  if (selected === q.correct) {
+    quizScore++;
+    selectedButton.classList.add('correct');
+    feedback.innerText = 'BENERRR 😭💙 Kamu kenal aku banget!';
+  } else {
+    selectedButton.classList.add('wrong');
+    feedback.innerText = 'Hehe salahhh 😭 Jawaban yang benar sudah aku kasih warna hijau.';
+  }
+
+  setTimeout(() => {
+    quizIndex++;
+    if (quizIndex < quizData.length) {
+      renderQuizQuestion();
+    } else {
+      showQuizResult();
+    }
+  }, 900);
+}
+
+function showQuizResult() {
+  document.getElementById('quizProgress').innerText = 'Selesai!';
+  document.getElementById('quizQuestion').style.display = 'none';
+  document.getElementById('quizOptions').style.display = 'none';
+  document.getElementById('quizFeedback').style.display = 'none';
+
+  const result = document.getElementById('quizResult');
+  result.style.display = 'block';
+
+  let message = '';
+  if (quizScore === 10) {
+    message = 'PERFECT! 😭💙 Kamu bener-bener hafal aku!';
+  } else if (quizScore >= 8) {
+    message = 'WAAA kamu kenal aku banget! 🥺💙';
+  } else if (quizScore >= 5) {
+    message = 'Lumayan nihhh, masih harus lebih kenal aku 😭';
+  } else {
+    message = 'KOK BISA SALAH BANYAK 😭 Ayo kenalan lagi sama aku!';
+  }
+
+  result.innerHTML = `
+    <strong>Skor kamu: ${quizScore}/10</strong><br><br>
+    ${message}<br><br>
+    <button class="btn" onclick="goToCatchGame()">💙 Lanjut Tangkap Hati</button>
+  `;
+}
+
+function goToCatchGame() {
+  document.getElementById('quizQuestion').style.display = '';
+  document.getElementById('quizOptions').style.display = '';
+  document.getElementById('quizFeedback').style.display = '';
+  animateSlides(currentSlide, 12);
+}
+
+
+let catchTimer = null;
+let catchSpawner = null;
+let catchScore = 0;
+let catchTime = 30;
+let catchRunning = false;
+
+function startCatchGame() {
+  clearInterval(catchTimer);
+  clearInterval(catchSpawner);
+  catchScore = 0;
+  catchTime = 30;
+  catchRunning = true;
+
+  const area = document.getElementById('catchArea');
+  area.innerHTML = '';
+  document.getElementById('catchScore').innerText = '0';
+  document.getElementById('catchTime').innerText = '30';
+  document.getElementById('catchMessage').innerText = 'Ayo tangkap sebanyak-banyaknya! 💙';
+
+  spawnCatchHeart();
+  catchSpawner = setInterval(spawnCatchHeart, 650);
+
+  catchTimer = setInterval(() => {
+    catchTime--;
+    document.getElementById('catchTime').innerText = catchTime;
+    if (catchTime <= 0) finishCatchGame();
+  }, 1000);
+}
+
+function spawnCatchHeart() {
+  if (!catchRunning) return;
+
+  const area = document.getElementById('catchArea');
+  const heart = document.createElement('div');
+  const bad = Math.random() < 0.28;
+
+  heart.className = 'catch-heart';
+  heart.innerText = bad ? '💔' : '💙';
+  heart.dataset.bad = bad ? '1' : '0';
+
+  const maxX = Math.max(0, area.clientWidth - 48);
+  const maxY = Math.max(0, area.clientHeight - 48);
+  heart.style.left = Math.random() * maxX + 'px';
+  heart.style.top = Math.random() * maxY + 'px';
+
+  heart.onclick = () => {
+    if (!catchRunning) return;
+    if (heart.dataset.bad === '1') {
+      catchScore = Math.max(0, catchScore - 1);
+      document.getElementById('catchMessage').innerText = 'EH JANGAN YANG 💔 😭';
+    } else {
+      catchScore++;
+      document.getElementById('catchMessage').innerText = 'DAPETTT 💙✨';
+    }
+    document.getElementById('catchScore').innerText = catchScore;
+    heart.remove();
+  };
+
+  area.appendChild(heart);
+  setTimeout(() => heart.remove(), 1300);
+}
+
+function finishCatchGame() {
+  if (!catchRunning) return;
+  catchRunning = false;
+  clearInterval(catchTimer);
+  clearInterval(catchSpawner);
+  document.getElementById('catchArea').innerHTML = '';
+
+  const message = document.getElementById('catchMessage');
+  message.innerText = `Selesai! Skor kamu ${catchScore} 💙🌸`;
+
+  setTimeout(showFlowerEnding, 1200);
+}
+
+function showFlowerEnding() {
+  const ending = document.getElementById('flowerEnding');
+  const field = document.getElementById('flowerField');
+  field.innerHTML = '';
+
+  /*
+    NAMA FILE BUNGA YANG HARUS KAMU SIMPAN DI FOLDER YANG SAMA DENGAN HTML:
+    bunga1.png sampai bunga8.png
+  */
+  const flowerSources = [
+    'bunga1.png',
+    'bunga2.png',
+    'bunga3.png',
+    'bunga4.png',
+    'bunga5.png',
+    'bunga6.png',
+    'bunga7.png',
+    'bunga8.png'
+  ];
+
+  const positions = [
+    [-55,-45], [0,-52], [52,-42],
+    [-60,0], [58,4],
+    [-48,45], [4,52], [54,46],
+    [-28,-18], [30,20], [0,0]
+  ];
+
+  ending.classList.add('show');
+  ending.setAttribute('aria-hidden', 'false');
+
+  positions.forEach((pos, i) => {
+    const img = document.createElement('img');
+    img.className = 'flower-piece';
+    img.src = flowerSources[i % flowerSources.length];
+    img.alt = '';
+    img.style.left = '50%';
+    img.style.top = '50%';
+    img.style.setProperty('--sx', `${pos[0]}vw`);
+    img.style.setProperty('--sy', `${pos[1]}vh`);
+    img.style.setProperty('--rot', `${(i % 2 ? 1 : -1) * (8 + i * 2)}deg`);
+    img.style.animationDelay = `${i * 0.12}s`;
+    field.appendChild(img);
+  });
+}
+
 /* =====================================================
    MUSIK
 ===================================================== */
@@ -1302,29 +1587,260 @@ img {
 }
 
 
-/* FIX FINAL - SLIDE 2, 3, 9 */
-#slide2 .content,
-#slide3 .content,
-#slide9 .content {
-  transform: translateX(-12px);
+/* =====================================================
+   MINI GAMES - SLIDE 11 & 12 + FLOWER ENDING
+   ASSET FOTO DIAMBIL DARI FILE EKSTERNAL
+===================================================== */
+
+.game-content {
+  justify-content: flex-start;
+  padding-top: 28px;
 }
 
-#slide2 h1,
-#slide3 h1,
-#slide9 h1 {
-  font-size: 22px;
+.quiz-box {
+  width: min(100%, 520px);
+  background: #f5fbff;
+  border: 2px solid #d8efff;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(83,175,250,.12);
 }
 
-#slide2 p,
-#slide3 p,
-#slide9 p {
+.quiz-progress {
   font-size: 13px;
+  color: #6aaed6;
+  margin-bottom: 8px;
 }
 
-#slide2 img,
-#slide3 img,
-#slide9 img {
-  max-width: 68%;
+.quiz-question {
+  font-size: 21px;
+  font-weight: 600;
+  color: #333;
+  margin: 8px 0 18px;
+  line-height: 1.45;
+}
+
+.quiz-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.quiz-option {
+  border: 2px solid #d7edfb;
+  background: white;
+  color: #333;
+  border-radius: 14px;
+  padding: 12px 10px;
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.quiz-option:hover {
+  transform: translateY(-2px);
+  border-color: #53affa;
+}
+
+.quiz-option.correct {
+  background: #dff8e8;
+  border-color: #51c878;
+}
+
+.quiz-option.wrong {
+  background: #ffe4e4;
+  border-color: #ef7777;
+}
+
+.quiz-feedback {
+  min-height: 30px;
+  margin: 14px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.quiz-result {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.catch-area {
+  position: relative;
+  width: min(100%, 520px);
+  height: min(52vh, 380px);
+  min-height: 290px;
+  overflow: hidden;
+  border-radius: 22px;
+  background: linear-gradient(180deg,#eefaff,#ffffff);
+  border: 2px solid #d8efff;
+  box-shadow: inset 0 0 30px rgba(83,175,250,.08);
+  touch-action: manipulation;
+}
+
+.catch-heart {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  font-size: 32px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  animation: heartFloat .9s ease-in-out infinite alternate;
+}
+
+@keyframes heartFloat {
+  from { transform: translateY(0) rotate(-6deg); }
+  to { transform: translateY(-7px) rotate(6deg); }
+}
+
+.catch-hud {
+  width: min(100%, 520px);
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 8px 0 10px;
+  font-weight: 600;
+  color: #478db5;
+}
+
+.catch-message {
+  min-height: 28px;
+  font-size: 14px;
+  margin: 6px 0;
+}
+
+.flower-ending {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  overflow: hidden;
+  background: #b4e5ff;
+}
+
+.flower-ending.show {
+  display: block;
+}
+
+.flower-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.flower-piece {
+  position: absolute;
+  width: clamp(230px, 42vw, 520px);
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  opacity: 0;
+  object-fit: contain;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  animation: flowerSweep 2.8s cubic-bezier(.2,.75,.15,1) forwards;
+}
+
+@keyframes flowerSweep {
+  0% {
+    opacity: 0;
+    transform: translate(var(--sx), var(--sy)) scale(.12) rotate(var(--rot));
+  }
+  22% { opacity: 1; }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(2.25) rotate(0deg);
+  }
+}
+
+.flower-cover {
+  position: absolute;
+  inset: -10%;
+  background: rgba(235,250,255,.12);
+  clip-path: circle(0% at 50% 50%);
+  animation: circleCover 2.9s cubic-bezier(.15,.75,.15,1) forwards;
+  pointer-events: none;
+}
+
+@keyframes circleCover {
+  0% { clip-path: circle(0% at 50% 50%); }
+  100% { clip-path: circle(80% at 50% 50%); }
+}
+
+.flower-name {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(.85);
+  width: 90%;
+  text-align: center;
+  opacity: 0;
+  color: white;
+  text-shadow: 0 3px 16px rgba(0,0,0,.5);
+  z-index: 4;
+  animation: nameAppear .9s ease forwards;
+  animation-delay: 3.15s;
+}
+
+.flower-name strong {
+  display: block;
+  font-family: 'Titan One', sans-serif;
+  font-size: clamp(30px, 7vw, 58px);
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.flower-name span {
+  display: block;
+  margin-top: 10px;
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(15px, 3vw, 24px);
+  font-weight: 500;
+  letter-spacing: 2px;
+}
+
+@keyframes nameAppear {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(.85); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@media (max-width: 500px) {
+  .quiz-options { grid-template-columns: 1fr; }
+  .quiz-box { padding: 15px; }
+  .quiz-question { font-size: 18px; }
+  .catch-area { min-height: 300px; height: 48vh; }
+  .catch-heart { width: 44px; height: 44px; font-size: 29px; }
+  .flower-piece { width: 78vw; }
+}
+
+
+/* FIX NAVIGASI SLIDE 10 */
+.nav-btns {
+  pointer-events: auto !important;
+  z-index: 100 !important;
+}
+
+.nav-btns .btn {
+  position: relative;
+  z-index: 101;
+  pointer-events: auto !important;
+  touch-action: manipulation;
+}
+
+#slide9 .nav-btns {
+  pointer-events: auto !important;
+  z-index: 200 !important;
+}
+
+#slide9 .nav-btns .btn {
+  pointer-events: auto !important;
+  z-index: 201 !important;
 }
 
 </style>
@@ -2000,7 +2516,8 @@ img {
 
 
     <button class="btn"
-            onclick="nextSlide()">
+            type="button"
+            onclick="goToSlide10()">
 
       Lanjut ➡
 
@@ -2065,7 +2582,7 @@ img {
 
 
   <div class="nav-btns"
-       style="justify-content:center;">
+       style="justify-content:center; gap:10px;">
 
     <button class="btn"
             onclick="prevSlide()">
@@ -2074,10 +2591,76 @@ img {
 
     </button>
 
+    <button id="miniGameBtn"
+            class="btn"
+            onclick="goToMiniGames()"
+            style="display:none;">
+
+      🎮 Mini Games ➡
+
+    </button>
+
   </div>
 
 </div>
 
+
+
+<!-- =====================================================
+     SLIDE 11 - TEBAK AKU
+===================================================== -->
+<div class="slide" id="slide11">
+  <div class="content game-content">
+    <h1>🎯 Tebak Aku</h1>
+    <p>Seberapa kenal kamu sama aku? 😭💙</p>
+
+    <div class="quiz-box">
+      <div id="quizProgress" class="quiz-progress"></div>
+      <div id="quizQuestion" class="quiz-question"></div>
+      <div id="quizOptions" class="quiz-options"></div>
+      <div id="quizFeedback" class="quiz-feedback"></div>
+      <div id="quizResult" class="quiz-result" style="display:none;"></div>
+    </div>
+  </div>
+
+  <div class="nav-btns" style="justify-content:center;">
+    <button class="btn" onclick="prevSlide()">⬅ Kembali</button>
+  </div>
+</div>
+
+<!-- =====================================================
+     SLIDE 12 - TANGKAP HATI
+===================================================== -->
+<div class="slide" id="slide12">
+  <div class="content game-content">
+    <h1>💙 Tangkap Hati</h1>
+    <p>Tangkap 💙, jangan sampai kena 💔!</p>
+
+    <div class="catch-hud">
+      <span>Skor: <b id="catchScore">0</b></span>
+      <span>Waktu: <b id="catchTime">30</b>s</span>
+    </div>
+
+    <div id="catchArea" class="catch-area"></div>
+    <div id="catchMessage" class="catch-message"></div>
+  </div>
+
+  <div class="nav-btns" style="justify-content:center;">
+    <button class="btn" onclick="prevSlide()">⬅ Kembali</button>
+  </div>
+</div>
+
+<!-- =====================================================
+     FLOWER ENDING - TANPA SLIDE 13
+===================================================== -->
+<div id="flowerEnding" class="flower-ending" aria-hidden="true">
+  <div id="flowerField" class="flower-field"></div>
+  <div class="flower-cover"></div>
+  <div class="flower-name">
+    <strong>Gary Neville R</strong>
+    <span>07-09-2005</span>
+  </div>
+</div>
 
 <!-- =====================================================
      MUSIK
@@ -2181,6 +2764,20 @@ function animateSlides(
 
   }
 
+
+  if (newIndex === 11) {
+
+    startQuiz();
+
+  }
+
+
+  if (newIndex === 12) {
+
+    startCatchGame();
+
+  }
+
 }
 
 
@@ -2188,9 +2785,14 @@ function animateSlides(
    NEXT / PREVIOUS
 ===================================================== */
 
+function goToSlide10() {
+  if (currentSlide !== 9) return;
+  animateSlides(9, 10);
+}
+
 function nextSlide() {
 
-  if (currentSlide < 10) {
+  if (currentSlide < 12) {
 
     animateSlides(
       currentSlide,
@@ -2833,6 +3435,14 @@ function growPhoto() {
       'Makasih yaaa sayanggggggg 🥺💙';
 
 
+    const miniGameBtn =
+      document.getElementById('miniGameBtn');
+
+    if (miniGameBtn) {
+      miniGameBtn.style.display = 'inline-block';
+    }
+
+
     createSparkleExplosion();
 
   }
@@ -2879,6 +3489,14 @@ function resetPhoto() {
 
   result.innerText =
     '';
+
+
+  const miniGameBtn =
+    document.getElementById('miniGameBtn');
+
+  if (miniGameBtn) {
+    miniGameBtn.style.display = 'none';
+  }
 
 
   document.getElementById(
