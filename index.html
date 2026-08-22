@@ -1,0 +1,3255 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Ucapan Ulang Tahun 💙</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Titan+One&display=swap"
+      rel="stylesheet">
+
+<style>
+
+/* =====================================================
+   DASAR
+===================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+
+  margin: 0;
+
+  height: 100vh;
+
+  background: #b4e5ff;
+
+  font-family: 'Sora', sans-serif;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  overflow: hidden;
+
+}
+
+
+/* =====================================================
+   CANVAS BACKGROUND
+===================================================== */
+
+#canvas {
+
+  position: fixed;
+
+  inset: 0;
+
+  width: 100%;
+
+  height: 100%;
+
+  z-index: 0;
+
+  pointer-events: none;
+
+}
+
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.card {
+
+  position: relative;
+
+  z-index: 2;
+
+  width: 90%;
+
+  max-width: 630px;
+
+  height: 90vh;
+
+  min-height: 600px;
+
+  background: white;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 8px 30px rgba(0,0,0,0.2);
+
+  overflow: hidden;
+
+}
+
+
+/* =====================================================
+   SLIDE
+===================================================== */
+
+.slide {
+
+  position: absolute;
+
+  inset: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  background: white;
+
+}
+
+.slide.active {
+
+  opacity: 1;
+
+  pointer-events: auto;
+
+}
+
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.content {
+
+  flex: 1;
+
+  padding: 30px 25px 80px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  text-align: center;
+
+  overflow-y: auto;
+
+}
+
+
+h1 {
+
+  font-family: 'Titan One', sans-serif;
+
+  font-size: 32px;
+
+  font-weight: 400;
+
+  color: #53affa;
+
+  margin: 10px 0 18px;
+
+  text-shadow:
+    2px 2px 0 #ffffff,
+    3px 4px 8px rgba(30, 124, 255, 0.35);
+
+  display: inline-block;
+
+  line-height: 1.25;
+
+}
+
+/* Setiap huruf bergerak pelan naik-turun seperti ombak */
+h1 .wave-letter {
+  display: inline-block;
+  white-space: pre;
+  animation: letterWave 4.8s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes letterWave {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(var(--wave-distance));
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(calc(var(--wave-distance) * -0.65));
+  }
+}
+
+
+
+p {
+
+  font-family: 'Sora', sans-serif;
+
+  font-size: 17px;
+
+  font-weight: 400;
+
+  color: #333;
+
+  line-height: 1.7;
+
+}
+
+
+/* =====================================================
+   GAMBAR
+===================================================== */
+
+img {
+
+  max-width: 80%;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 5px 18px rgba(0,0,0,0.25);
+
+  margin: 15px 0;
+
+}
+
+
+
+/* =====================================================
+   BUTTON
+===================================================== */
+
+.btn {
+
+  padding: 11px 22px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: #53affa;
+
+  color: white;
+
+  font-family: 'Sora', sans-serif;
+
+  font-size: 16px;
+
+  font-weight: 500;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 10px rgba(0,0,0,0.2);
+
+  transition: 0.2s;
+
+}
+
+.btn:hover {
+
+  background: #1e7cff;
+
+  transform: translateY(-2px);
+
+}
+
+.btn:active {
+
+  transform: scale(0.95);
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+.nav-btns {
+
+  position: absolute;
+
+  bottom: 0;
+
+  left: 0;
+
+  right: 0;
+
+  height: 65px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 10px 20px;
+
+  border-top: 1px solid #eee;
+
+  background: white;
+
+  z-index: 30;
+
+}
+
+
+/* =====================================================
+   ANIMASI SLIDE
+===================================================== */
+
+@keyframes slideInRight {
+
+  from {
+
+    transform: translateX(100%);
+
+    opacity: 0;
+
+  }
+
+  to {
+
+    transform: translateX(0);
+
+    opacity: 1;
+
+  }
+
+}
+
+
+@keyframes slideOutLeft {
+
+  from {
+
+    transform: translateX(0);
+
+    opacity: 1;
+
+  }
+
+  to {
+
+    transform: translateX(-100%);
+
+    opacity: 0;
+
+  }
+
+}
+
+
+@keyframes slideInLeft {
+
+  from {
+
+    transform: translateX(-100%);
+
+    opacity: 0;
+
+  }
+
+  to {
+
+    transform: translateX(0);
+
+    opacity: 1;
+
+  }
+
+}
+
+
+@keyframes slideOutRight {
+
+  from {
+
+    transform: translateX(0);
+
+    opacity: 1;
+
+  }
+
+  to {
+
+    transform: translateX(100%);
+
+    opacity: 0;
+
+  }
+
+}
+
+
+.slide-in-right {
+
+  animation:
+    slideInRight 0.6s forwards;
+
+}
+
+
+.slide-out-left {
+
+  animation:
+    slideOutLeft 0.6s forwards;
+
+}
+
+
+.slide-in-left {
+
+  animation:
+    slideInLeft 0.6s forwards;
+
+}
+
+
+.slide-out-right {
+
+  animation:
+    slideOutRight 0.6s forwards;
+
+}
+
+
+/* =====================================================
+   SLIDE 1 - PIN LOVE
+===================================================== */
+
+.pin-box {
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 18px;
+
+  margin: 25px 0;
+
+}
+
+
+/* titik PIN berbentuk love */
+
+.pin-heart {
+
+  width: 22px;
+
+  height: 22px;
+
+  position: relative;
+
+  transform:
+    rotate(-45deg);
+
+  background: #dcefff;
+
+  border-radius: 4px;
+
+  transition: 0.2s;
+
+}
+
+
+.pin-heart::before,
+.pin-heart::after {
+
+  content: "";
+
+  position: absolute;
+
+  width: 22px;
+
+  height: 22px;
+
+  background: #dcefff;
+
+  border-radius: 50%;
+
+}
+
+
+.pin-heart::before {
+
+  top: -11px;
+
+  left: 0;
+
+}
+
+
+.pin-heart::after {
+
+  top: 0;
+
+  left: 11px;
+
+}
+
+
+.pin-heart.filled {
+
+  background: #53affa;
+
+  box-shadow:
+    0 0 12px rgba(83,175,250,0.6);
+
+}
+
+
+.pin-heart.filled::before,
+.pin-heart.filled::after {
+
+  background: #53affa;
+
+}
+
+
+.error {
+
+  color: #033e96;
+
+  margin-top: 10px;
+
+  font-size: 15px;
+
+}
+
+
+/* =====================================================
+   KEYBOARD
+===================================================== */
+
+.keyboard .row {
+
+  display: flex;
+
+  justify-content: center;
+
+  margin: 4px 0;
+
+}
+
+
+.keyboard button {
+
+  width: 65px;
+
+  height: 55px;
+
+  margin: 5px;
+
+  border: none;
+
+  border-radius: 13px;
+
+  font-family: 'Sora', sans-serif;
+
+  font-size: 20px;
+
+  font-weight: 500;
+
+  background: #53affa;
+
+  color: white;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 10px rgba(0,0,0,0.2);
+
+  transition: 0.15s;
+
+}
+
+
+.keyboard button:hover {
+
+  background: #1e7cff;
+
+}
+
+
+.keyboard button:active {
+
+  transform: scale(0.9);
+
+}
+
+
+/* =====================================================
+   SLIDE 2 & 3 - POSISI KE ATAS
+===================================================== */
+
+#slide2 .content,
+#slide3 .content {
+  justify-content: flex-start;
+  padding-top: 30px;
+}
+
+
+/* =====================================================
+   SLIDE 4 & 5 FOTO KE ATAS
+===================================================== */
+
+#slide4 .content,
+#slide5 .content {
+
+  justify-content: flex-start;
+
+  padding-top: 30px;
+
+}
+
+
+/* =====================================================
+   SLIDE 6
+===================================================== */
+
+#slide6 .content {
+
+  position: relative;
+
+}
+
+
+.long-message {
+
+  max-width: 500px;
+
+}
+
+
+.yes-no {
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 25px;
+
+  margin-top: 20px;
+
+  min-height: 70px;
+
+  width: 100%;
+
+}
+
+
+.yes-btn {
+
+  background: #53affa;
+
+}
+
+
+.no-btn {
+
+  background: #ff8ca8;
+
+}
+
+
+#noButton {
+
+  position: relative;
+
+  transition:
+    left 0.25s ease,
+    top 0.25s ease,
+    transform 0.2s ease;
+
+}
+
+
+.answer-message {
+
+  min-height: 30px;
+
+  color: #53affa;
+
+  font-size: 15px;
+
+}
+
+
+/* =====================================================
+   SLIDE 7
+===================================================== */
+
+#slide7 {
+
+  overflow: hidden;
+
+}
+
+
+#slide7 .content {
+
+  position: relative;
+
+  z-index: 5;
+
+}
+
+
+.typing-box {
+
+  width: 90%;
+
+  min-height: 150px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 20px;
+
+  background: #eaf8ff;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 5px 15px rgba(0,0,0,0.1);
+
+  margin: 20px 0;
+
+}
+
+
+#typingText {
+
+  font-family: 'Sora', sans-serif;
+
+  font-size: 20px;
+
+  font-weight: 500;
+
+  line-height: 1.7;
+
+  color: #333;
+
+  text-align: center;
+
+}
+
+
+#typingText::after {
+
+  content: "|";
+
+  color: #53affa;
+
+  animation:
+    blinkCursor 0.7s infinite;
+
+}
+
+
+@keyframes blinkCursor {
+
+  0%, 50% {
+
+    opacity: 1;
+
+  }
+
+  51%, 100% {
+
+    opacity: 0;
+
+  }
+
+}
+
+
+/* =====================================================
+   EMOJI SLIDE 7
+===================================================== */
+
+#fallingEmojiContainer {
+
+  position: absolute;
+
+  inset: 0;
+
+  overflow: hidden;
+
+  pointer-events: none;
+
+  z-index: 1;
+
+}
+
+
+.falling-emoji {
+
+  position: absolute;
+
+  top: -60px;
+
+  animation:
+    fallingEmoji linear forwards;
+
+  pointer-events: none;
+
+}
+
+
+@keyframes fallingEmoji {
+
+  from {
+
+    transform:
+      translateY(-80px)
+      rotate(0deg);
+
+    opacity: 1;
+
+  }
+
+  to {
+
+    transform:
+      translateY(800px)
+      rotate(360deg);
+
+    opacity: 0;
+
+  }
+
+}
+
+
+/* =====================================================
+   SLIDE 8 - CURAHAN HATI
+===================================================== */
+
+#slide8 {
+
+  overflow: hidden;
+
+}
+
+
+#slide8 .content {
+
+  position: relative;
+
+  z-index: 5;
+
+  justify-content: flex-start;
+
+  padding-top: 25px;
+
+  padding-bottom: 80px;
+
+}
+
+
+#heartRain {
+
+  position: absolute;
+
+  inset: 0;
+
+  overflow: hidden;
+
+  pointer-events: none;
+
+  z-index: 2;
+
+}
+
+
+.heart-rain-item {
+
+  position: absolute;
+
+  top: -70px;
+
+  pointer-events: none;
+
+  animation:
+    heartRainFall linear forwards;
+
+}
+
+
+@keyframes heartRainFall {
+
+  0% {
+
+    transform:
+      translateY(-80px)
+      rotate(0deg);
+
+    opacity: 0;
+
+  }
+
+  10% {
+
+    opacity: 1;
+
+  }
+
+  100% {
+
+    transform:
+      translateY(850px)
+      rotate(360deg);
+
+    opacity: 0;
+
+  }
+
+}
+
+
+.heart-message {
+
+  width: 90%;
+
+  max-width: 550px;
+
+  max-height: 58vh;
+
+  overflow-y: auto;
+
+  padding: 20px 25px;
+
+  background: rgba(255,255,255,0.95);
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 5px 18px rgba(0,0,0,0.12);
+
+  text-align: left;
+
+  position: relative;
+
+  z-index: 10;
+
+}
+
+
+.heart-message::-webkit-scrollbar {
+
+  width: 6px;
+
+}
+
+
+.heart-message::-webkit-scrollbar-track {
+
+  background: #eef9ff;
+
+  border-radius: 10px;
+
+}
+
+
+.heart-message::-webkit-scrollbar-thumb {
+
+  background: #53affa;
+
+  border-radius: 10px;
+
+}
+
+
+.heart-message p {
+
+  font-size: 15px;
+
+  line-height: 1.8;
+
+  margin: 0 0 18px;
+
+}
+
+
+.heart-message strong {
+
+  color: #53affa;
+
+  font-weight: 700;
+
+}
+
+
+/* =====================================================
+   SLIDE 9 - TERIMA KASIH
+===================================================== */
+
+#slide9 .content {
+
+  justify-content: center;
+
+}
+
+
+/* =====================================================
+   SLIDE 10 - FOTO
+===================================================== */
+
+#slide10 {
+
+  overflow: hidden;
+
+}
+
+
+.slide10-content {
+
+  position: relative;
+
+}
+
+
+.like-question {
+
+  margin: 5px 0 10px;
+
+}
+
+
+.photo-area {
+
+  position: relative;
+
+  width: 300px;
+
+  height: 300px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  cursor: pointer;
+
+  z-index: 5;
+
+}
+
+
+#likePhoto {
+
+  width: 150px;
+
+  height: 150px;
+
+  object-fit: cover;
+
+  margin: 0;
+
+  border-radius: 20px;
+
+  transition:
+    width 0.25s ease,
+    height 0.25s ease;
+
+  user-select: none;
+
+  -webkit-user-drag: none;
+
+}
+
+
+#likePhoto:active {
+
+  transform: scale(0.95);
+
+}
+
+
+.click-hint {
+
+  color: #53affa;
+
+  font-size: 17px;
+
+  margin: 0;
+
+}
+
+
+.love-result {
+
+  color: #53affa;
+
+  font-size: 18px;
+
+  font-weight: 500;
+
+  min-height: 30px;
+
+}
+
+
+/* =====================================================
+   SPARKLE EXPLOSION
+===================================================== */
+
+#sparkles {
+
+  position: absolute;
+
+  inset: 0;
+
+  pointer-events: none;
+
+  z-index: 50;
+
+}
+
+
+.sparkle {
+
+  position: absolute;
+
+  left: 50%;
+
+  top: 50%;
+
+  pointer-events: none;
+
+  animation:
+    sparkleExplosion 1.2s
+    ease-out forwards;
+
+}
+
+
+@keyframes sparkleExplosion {
+
+  0% {
+
+    transform:
+      translate(-50%, -50%)
+      scale(0);
+
+    opacity: 1;
+
+  }
+
+  20% {
+
+    transform:
+      translate(
+        calc(-50% + var(--x1)),
+        calc(-50% + var(--y1))
+      )
+      scale(1.3);
+
+    opacity: 1;
+
+  }
+
+  100% {
+
+    transform:
+      translate(
+        calc(-50% + var(--x2)),
+        calc(-50% + var(--y2))
+      )
+      scale(0.5);
+
+    opacity: 0;
+
+  }
+
+}
+
+
+/* =====================================================
+   MUSIK
+===================================================== */
+
+#musicToggle {
+
+  position: absolute;
+
+  bottom: 75px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  padding: 9px 18px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #53affa;
+
+  color: white;
+
+  font-family: 'Sora', sans-serif;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 10px rgba(0,0,0,0.2);
+
+  z-index: 100;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 500px) {
+
+  .card {
+
+    width: 94%;
+
+    height: 94vh;
+
+  }
+
+
+  h1 {
+
+    font-size: 25px;
+
+  }
+
+
+  p {
+
+    font-size: 15px;
+
+  }
+
+
+  .pin-box {
+
+    gap: 14px;
+
+  }
+
+
+  .keyboard button {
+
+    width: 58px;
+
+    height: 52px;
+
+  }
+
+
+  .heart-message {
+
+    max-height: 60vh;
+
+    padding: 18px;
+
+  }
+
+
+  .heart-message p {
+
+    font-size: 14px;
+
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<canvas id="canvas"></canvas>
+
+
+<div class="card">
+
+
+<!-- =====================================================
+     SLIDE 1 - PIN
+===================================================== -->
+
+<div class="slide active" id="slide1">
+
+  <div class="content">
+
+    <h1>Masukkan PIN 🗝️</h1>
+
+
+    <div class="pin-box">
+
+      <div class="pin-heart" id="pin0"></div>
+
+      <div class="pin-heart" id="pin1"></div>
+
+      <div class="pin-heart" id="pin2"></div>
+
+      <div class="pin-heart" id="pin3"></div>
+
+    </div>
+
+
+    <div class="keyboard">
+
+      <div class="row">
+
+        <button onclick="pressNum(1)">
+          1
+        </button>
+
+        <button onclick="pressNum(2)">
+          2
+        </button>
+
+        <button onclick="pressNum(3)">
+          3
+        </button>
+
+      </div>
+
+
+      <div class="row">
+
+        <button onclick="pressNum(4)">
+          4
+        </button>
+
+        <button onclick="pressNum(5)">
+          5
+        </button>
+
+        <button onclick="pressNum(6)">
+          6
+        </button>
+
+      </div>
+
+
+      <div class="row">
+
+        <button onclick="pressNum(7)">
+          7
+        </button>
+
+        <button onclick="pressNum(8)">
+          8
+        </button>
+
+        <button onclick="pressNum(9)">
+          9
+        </button>
+
+      </div>
+
+
+      <div class="row">
+
+        <button onclick="deleteNum()">
+          ⌫
+        </button>
+
+        <button onclick="pressNum(0)">
+          0
+        </button>
+
+        <button onclick="checkPin()">
+          ➤
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="error"
+         id="errorMsg">
+    </div>
+
+
+    <p>
+
+      <i>
+        * Clue: kelahiran kamu
+      </i>
+
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     SLIDE 2
+===================================================== -->
+
+<div class="slide" id="slide2">
+
+  <div class="content">
+
+    <h1>
+      🫧Selamat Ulang Tahun🫧
+    </h1>
+
+
+    <img src="birthday.gif"
+         alt="Happy Birthday">
+
+
+    <p>
+
+      Semoga panjang umur dan sehat selalu,
+      aku sayang banget sama kamuu sayang💙
+
+    </p>
+
+  </div>
+
+
+  <div class="nav-btns"
+       style="justify-content:center;">
+
+    <button class="btn"
+            onclick="nextSlide()">
+
+      Lanjut ➡
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     SLIDE 3
+===================================================== -->
+
+<div class="slide" id="slide3">
+
+  <div class="content">
+
+    <h1>
+      ♡⊹˚₊Doa & Harapan₊˚⊹♡
+    </h1>
+
+
+    <img src="hope.gif"
+         alt="Doa dan Harapan">
+
+
+    <p>
+
+      Semoga kamu dikelilingi orang-orang baik, dan dilimpahkan
+      rezeki serta berkah. Aamiinn💙
+
+    </p>
+
+  </div>
+
+
+  <div class="nav-btns">
+
+    <button class="btn"
+            onclick="prevSlide()">
+
+      ⬅ Kembali
+
+    </button>
+
+
+    <button class="btn"
+            onclick="nextSlide()">
+
+      Lanjut ➡
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     SLIDE 4
+===================================================== -->
+
+<div class="slide" id="slide4">
+
+  <div class="content">
+
+    <img src="foto.jpg"
+         alt="Foto">
+
+
+    <p>
+
+      Kamu jangan ngerasa sendiri ya sayang
+      aku disini sama kamu💙
+
+    </p>
+
+  </div>
+
+
+  <div class="nav-btns">
+
+    <button class="btn"
+            onclick="prevSlide()">
+
+      ⬅ Kembali
+
+    </button>
+
+
+    <button class="btn"
+            onclick="nextSlide()">
+
+      Lanjut ➡
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     SLIDE 5
+===================================================== -->
+
+<div class="slide" id="slide5">
+
+  <div class="content">
+
+    <img src="thanks.gif"
+         alt="Terima Kasih">
+
+
+    <p>
+
+      Makasih udah hadir dihidup Aku,
+      jadi orang paling spesial di hidupku,
+      makasih udah nerima kekurangan aku,
+      aku berusaha buat memperbaiki diri aku supaya lebih baik:D 💙
+
+    </p>
+
+  </div>
+
+
+  <div class="nav-btns">
+
+    <button class="btn"
+            onclick="prevSlide()">
+
+      ⬅ Kembali
+
+    </button>
+
+
+    <button class="btn"
+            onclick="nextSlide()">
+
+      Lanjut ➡
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     SLIDE 6
+===================================================== -->
+
+<div class="slide" id="slide6">
+
+  <div class="content">
+
+    <h1>
+      Halo Sayang...
+    </h1>
+
+
+    <div class="long-message">
+
+      <p>
+
+        Happy Birthday yaaaa💙
+
+        <br><br>
+
+        Aku punya sesuatu buat kamu...
+
+        <br>
+
+        Kamu mau lihat sampai akhir?
+
+      </p>
+
+    </div>
+
+
+    <div class="yes-no">
+
+      <button class="btn yes-btn"
+              onclick="answerYes()">
+
+        YES 💙
+
+      </button>
+
+
+      <button class="btn no-btn"
+              id="noButton"
+              onclick="answerNo()"
+              onmouseenter="moveNoButton()"
+              ontouchstart="moveNoButton()">
+
+        NO ✖
+
+      </button>
+
+    </div>
+
+
+    <p id="answerMessage"
+       class="answer-message">
+    </p>
+
+  </div>
+
+
+  <div class="nav-btns">
+
+    <button class="btn"
+            onclick="prevSlide()">
+
+      ⬅ Kembali
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     SLIDE 7
+===================================================== -->
+
+<div class="slide" id="slide7">
+
+  <div id="fallingEmojiContainer"></div>
+
+
+  <div class="content">
+
+    <h1>
+      For u💙
+    </h1>
+
+
+    <div class="typing-box">
+
+      <div id="typingText"></div>
+
+    </div>
+
+  </div>
+
+
+  <div class="nav-btns">
+
+    <button class="btn"
+            onclick="prevSlide()">
+
+      ⬅ Kembali
+
+    </button>
+
+
+    <button class="btn"
+            onclick="nextSlide()">
+
+      Lanjut ➡
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     SLIDE 8 - CURAHAN HATI
+===================================================== -->
+
+<div class="slide" id="slide8">
+
+
+  <div id="heartRain"></div>
+
+
+  <div class="content">
+
+    <h1>
+      💙💙💙
+    </h1>
+
+
+    <div class="heart-message">
+
+      <p>
+
+        Happy birthday yaaa sayanggg kuuu💙
+
+      </p>
+
+
+      <p>
+
+        Aku sebenarnya bingung harus mulai
+        dari mana, karena ada banyak banget
+        hal yang ingin aku sampaikan ke kamu.
+        Mungkin selama ini aku nggak selalu
+        bisa mengungkapkan semuanya dengan
+        kata-kata, tapi hari ini aku ingin
+        mencoba mengatakannya.
+
+      </p>
+
+
+      <p>
+
+        Aku bersyukur banget bisa mengenal kamu.
+        Dari sekian banyak orang yang ada di dunia,
+        aku merasa beruntung karena bisa bertemu
+        dengan seseorang seperti kamu.
+
+      </p>
+
+
+      <p>
+
+        Mungkin aku nggak selalu sempurna,
+        mungkin aku pernah melakukan kesalahan,
+        pernah bikin kamu kesel, kecewa, atau
+        bahkan membuat kamu merasa nggak dimengerti.
+        Tapi percayalah, aku selalu berusaha
+        menjadi seseorang yang lebih baik untuk kamu.
+
+      </p>
+
+
+      <p>
+
+        Aku suka semua hal kecil tentang kamu.
+        Cara kamu berbicara, cara kamu tertawa,
+        cara kamu marah, cara kamu bercanda,
+        bahkan hal-hal kecil yang mungkin menurut
+        kamu biasa saja.
+
+      </p>
+
+
+      <p>
+
+        Aku cuma ingin kamu tahu kalau
+        keberadaanmu berarti buat aku.
+        Kamu bukan cuma seseorang yang hadir
+        di hidupku, tapi seseorang yang berhasil
+        membuat banyak hal terasa lebih berwarna.
+
+      </p>
+
+
+      <p>
+
+        Di hari ulang tahunmu ini, aku berharap
+        semoga semua hal baik selalu datang
+        kepada kamu. Semoga kamu selalu diberikan
+        kesehatan, kebahagiaan, rezeki yang cukup,
+        dan dikelilingi orang-orang yang benar-benar
+        menyayangimu.
+
+      </p>
+
+
+      <p>
+
+        Kalau suatu hari nanti kamu merasa capek,
+        merasa dunia terlalu berat, atau merasa
+        sendirian, semoga kamu ingat kalau ada
+        seseorang yang selalu mendoakan kamu.
+
+      </p>
+
+
+      <p>
+
+        Terima kasih karena sudah hadir.
+        Terima kasih karena sudah menjadi bagian
+        dari cerita hidupku.
+
+      </p>
+
+
+      <p>
+
+        Sekali lagi...
+
+        <br><br>
+
+        <strong>
+          Happy Birthday, sayang. 💙✨
+        </strong>
+
+        <br><br>
+
+        Semoga semua doa baik yang kamu panjatkan
+        hari ini perlahan menjadi kenyataan. ✨
+
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="nav-btns">
+
+    <button class="btn"
+            onclick="prevSlide()">
+
+      ⬅ Kembali
+
+    </button>
+
+
+    <button class="btn"
+            onclick="nextSlide()">
+
+      Lanjut ➡
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     SLIDE 9 - TERIMA KASIH
+===================================================== -->
+
+<div class="slide" id="slide9">
+
+  <div class="content">
+
+    <h1>
+      Terima Kasih bbyyy
+    </h1>
+
+
+    <img src="thankyou.gif"
+         alt="Terima Kasih">
+
+
+    <p>
+
+      Makasihh ya sayangg udah baca sampe akhir💙
+
+      <br><br>
+
+      Semoga semua ucapan dan doa baik
+      yang ada di sini bisa menjadi kenyataan. Aamiinn...
+
+      <br><br>
+
+      Sekali lagi...
+
+      <br>
+
+      <strong>
+        Hapiibidiii!! :3💙
+      </strong>
+
+      <br><br>
+
+      Semoga hari-harimu selalu dipenuhi
+      kebahagiaan, cinta, dan hal-hal baik. ✨
+
+    </p>
+
+
+    <div style="margin-top:10px;">
+
+      💙✨ With Love ✨💙
+
+    </div>
+
+  </div>
+
+
+  <div class="nav-btns"
+       style="justify-content:center;">
+
+    <button class="btn"
+            onclick="prevSlide()">
+
+      ⬅ Kembali
+
+    </button>
+
+
+    <button class="btn"
+            onclick="nextSlide()">
+
+      Lanjut ➡
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     SLIDE 10 - APAKAH KAMU SUKA
+===================================================== -->
+
+<div class="slide" id="slide10">
+
+  <div class="content slide10-content">
+
+    <h1>
+      kamu suka ndaa?
+    </h1>
+
+
+    <p class="like-question">
+
+      Kalau kamu suka,
+      pencet fotonya foto kucingnyaa ><
+
+    </p>
+
+
+    <div class="photo-area"
+         onclick="growPhoto()">
+
+
+      <!-- FOTO KHUSUS SLIDE 10
+           BEDA DENGAN FOTO SLIDE 4 -->
+
+      <img id="likePhoto"
+           src="fotohehe.jpg"
+           alt="Foto Favorit">
+
+
+      <div id="sparkles"></div>
+
+    </div>
+
+
+    <p id="clickHint"
+       class="click-hint">
+
+      🢁 Klik fotonya
+
+    </p>
+
+
+    <p id="loveResult"
+       class="love-result">
+    </p>
+
+  </div>
+
+
+  <div class="nav-btns"
+       style="justify-content:center;">
+
+    <button class="btn"
+            onclick="prevSlide()">
+
+      ⬅ Kembali
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     MUSIK
+===================================================== -->
+
+<button id="musicToggle"
+        onclick="toggleMusic()">
+
+  ▶ Play Musik
+
+</button>
+
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   SLIDE SYSTEM
+===================================================== */
+
+let currentSlide = 1;
+
+const slides =
+  document.querySelectorAll('.slide');
+
+
+function animateSlides(
+  oldIndex,
+  newIndex
+) {
+
+  const oldSlide =
+    slides[oldIndex - 1];
+
+  const newSlide =
+    slides[newIndex - 1];
+
+
+  slides.forEach(slide => {
+
+    slide.classList.remove(
+      'slide-in-right',
+      'slide-out-left',
+      'slide-in-left',
+      'slide-out-right',
+      'active'
+    );
+
+  });
+
+
+  if (newIndex > oldIndex) {
+
+    oldSlide.classList.add(
+      'slide-out-left'
+    );
+
+    newSlide.classList.add(
+      'slide-in-right'
+    );
+
+  } else {
+
+    oldSlide.classList.add(
+      'slide-out-right'
+    );
+
+    newSlide.classList.add(
+      'slide-in-left'
+    );
+
+  }
+
+
+  newSlide.classList.add('active');
+
+  currentSlide = newIndex;
+
+
+  if (newIndex === 7) {
+
+    startFallingEmojis();
+
+    startTypingEffect();
+
+  }
+
+
+  if (newIndex === 8) {
+
+    startHeartRain();
+
+  }
+
+
+  if (newIndex === 10) {
+
+    resetPhoto();
+
+  }
+
+}
+
+
+/* =====================================================
+   NEXT / PREVIOUS
+===================================================== */
+
+function nextSlide() {
+
+  if (currentSlide < 10) {
+
+    animateSlides(
+      currentSlide,
+      currentSlide + 1
+    );
+
+  }
+
+}
+
+
+function prevSlide() {
+
+  /*
+    Slide 1 sengaja tidak bisa
+    diakses kembali setelah PIN.
+  */
+
+  if (currentSlide > 2) {
+
+    animateSlides(
+      currentSlide,
+      currentSlide - 1
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   PIN
+===================================================== */
+
+let pinValue = '';
+
+const correctPin = '0709';
+
+
+function pressNum(num) {
+
+  if (pinValue.length >= 4)
+    return;
+
+
+  pinValue += num;
+
+  updatePinDisplay();
+
+}
+
+
+function deleteNum() {
+
+  pinValue =
+    pinValue.slice(0,-1);
+
+  updatePinDisplay();
+
+}
+
+
+function updatePinDisplay() {
+
+  for (
+    let i = 0;
+    i < 4;
+    i++
+  ) {
+
+    const heart =
+      document.getElementById(
+        'pin' + i
+      );
+
+
+    if (
+      i < pinValue.length
+    ) {
+
+      heart.classList.add(
+        'filled'
+      );
+
+    } else {
+
+      heart.classList.remove(
+        'filled'
+      );
+
+    }
+
+  }
+
+}
+
+
+function checkPin() {
+
+  const error =
+    document.getElementById(
+      'errorMsg'
+    );
+
+
+  if (
+    pinValue === correctPin
+  ) {
+
+    error.innerText = '';
+
+    animateSlides(1,2);
+
+  } else {
+
+    error.innerText =
+      'Salah sayang!! (ꐦˋᗣˊ)';
+
+    pinValue = '';
+
+    updatePinDisplay();
+
+  }
+
+}
+
+
+/* =====================================================
+   SLIDE 6 YES
+===================================================== */
+
+function answerYes() {
+
+  document.getElementById(
+    'answerMessage'
+  ).innerText =
+    'Awww makasiii bby💙';
+
+
+  setTimeout(() => {
+
+    animateSlides(6,7);
+
+  },700);
+
+}
+
+
+/* =====================================================
+   SLIDE 6 NO KABUR
+===================================================== */
+
+function moveNoButton() {
+
+  const button =
+    document.getElementById(
+      'noButton'
+    );
+
+
+  const content =
+    document.querySelector(
+      '#slide6 .content'
+    );
+
+
+  const width =
+    content.clientWidth;
+
+
+  const height =
+    content.clientHeight;
+
+
+  const buttonWidth =
+    button.offsetWidth;
+
+
+  const buttonHeight =
+    button.offsetHeight;
+
+
+  const maxX =
+    Math.max(
+      20,
+      width - buttonWidth - 30
+    );
+
+
+  const maxY =
+    Math.max(
+      100,
+      height - buttonHeight - 130
+    );
+
+
+  const randomX =
+    Math.random() * maxX;
+
+
+  const randomY =
+    100 +
+    Math.random() *
+    Math.max(
+      50,
+      maxY - 100
+    );
+
+
+  button.style.position =
+    'absolute';
+
+
+  button.style.left =
+    randomX + 'px';
+
+
+  button.style.top =
+    randomY + 'px';
+
+}
+
+
+function answerNo() {
+
+  moveNoButton();
+
+
+  document.getElementById(
+    'answerMessage'
+  ).innerText =
+    'IHHH.. jangan NOOO, pilih YES aku MAKSAA (⇀‸↼‶)';
+
+}
+
+
+/* =====================================================
+   SLIDE 7 TYPING
+===================================================== */
+
+const typingMessages = [
+
+  'Happy Birthday sayangggku💙',
+
+  'Semoga kamu selalu bahagia dan sehat selalu',
+
+  'Semoga semua impian dan harapan kamu bisa terwujud✨',
+
+  'Semoga hari-hari kamu selalu dipenuhi hal-hal baik.',
+
+  'Semoga kita bisa terus sama sama yaaa:(♡',
+
+  'Love u Sayangkuu💙'
+
+];
+
+
+let messageIndex = 0;
+
+let characterIndex = 0;
+
+let typingStarted = false;
+
+
+function startTypingEffect() {
+
+  if (typingStarted)
+    return;
+
+
+  typingStarted = true;
+
+  messageIndex = 0;
+
+  characterIndex = 0;
+
+
+  document.getElementById(
+    'typingText'
+  ).innerText = '';
+
+
+  typeMessage();
+
+}
+
+
+function typeMessage() {
+
+  const element =
+    document.getElementById(
+      'typingText'
+    );
+
+
+  const message =
+    typingMessages[
+      messageIndex
+    ];
+
+
+  if (
+    characterIndex <
+    message.length
+  ) {
+
+    element.innerText =
+      message.substring(
+        0,
+        characterIndex + 1
+      );
+
+
+    characterIndex++;
+
+
+    setTimeout(
+      typeMessage,
+      65
+    );
+
+  } else {
+
+    setTimeout(
+      eraseMessage,
+      1800
+    );
+
+  }
+
+}
+
+
+function eraseMessage() {
+
+  const element =
+    document.getElementById(
+      'typingText'
+    );
+
+
+  const message =
+    typingMessages[
+      messageIndex
+    ];
+
+
+  if (
+    characterIndex > 0
+  ) {
+
+    element.innerText =
+      message.substring(
+        0,
+        characterIndex - 1
+      );
+
+
+    characterIndex--;
+
+
+    setTimeout(
+      eraseMessage,
+      30
+    );
+
+  } else {
+
+    messageIndex++;
+
+
+    if (
+      messageIndex >=
+      typingMessages.length
+    ) {
+
+      messageIndex = 0;
+
+    }
+
+
+    setTimeout(
+      typeMessage,
+      500
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   EMOJI SLIDE 7
+===================================================== */
+
+function startFallingEmojis() {
+
+  const container =
+    document.getElementById(
+      'fallingEmojiContainer'
+    );
+
+
+  container.innerHTML = '';
+
+
+  const emojis = [
+
+    '💙',
+    '🤍',
+    '💙',
+    '🌸',
+    '✨',
+    '💫'
+
+  ];
+
+
+  for (
+    let i = 0;
+    i < 70;
+    i++
+  ) {
+
+    const emoji =
+      document.createElement(
+        'div'
+      );
+
+
+    emoji.className =
+      'falling-emoji';
+
+
+    emoji.innerText =
+      emojis[
+        Math.floor(
+          Math.random() *
+          emojis.length
+        )
+      ];
+
+
+    emoji.style.left =
+      Math.random() * 100 + '%';
+
+
+    emoji.style.fontSize =
+      (
+        15 +
+        Math.random() * 22
+      ) + 'px';
+
+
+    emoji.style.animationDuration =
+      (
+        3 +
+        Math.random() * 5
+      ) + 's';
+
+
+    emoji.style.animationDelay =
+      (
+        Math.random() * 3
+      ) + 's';
+
+
+    container.appendChild(
+      emoji
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   SLIDE 8 EMOJI HUJAN
+===================================================== */
+
+function startHeartRain() {
+
+  const container =
+    document.getElementById(
+      'heartRain'
+    );
+
+
+  container.innerHTML = '';
+
+
+  const emojis = [
+
+    '💙',
+    '💙',
+    '💙',
+    '🤍',
+    '🤍',
+    '✨',
+    '✨',
+    '🌸',
+    '🌸',
+    '💫'
+
+  ];
+
+
+  for (
+    let i = 0;
+    i < 100;
+    i++
+  ) {
+
+    const item =
+      document.createElement(
+        'div'
+      );
+
+
+    item.className =
+      'heart-rain-item';
+
+
+    item.innerText =
+      emojis[
+        Math.floor(
+          Math.random() *
+          emojis.length
+        )
+      ];
+
+
+    item.style.left =
+      Math.random() * 100 + '%';
+
+
+    item.style.fontSize =
+      (
+        12 +
+        Math.random() * 25
+      ) + 'px';
+
+
+    item.style.animationDuration =
+      (
+        4 +
+        Math.random() * 6
+      ) + 's';
+
+
+    item.style.animationDelay =
+      (
+        Math.random() * 5
+      ) + 's';
+
+
+    container.appendChild(
+      item
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   SLIDE 10 FOTO BERBEDA
+===================================================== */
+
+let photoSize = 150;
+
+const maxPhotoSize = 240;
+
+let explosionDone = false;
+
+
+function growPhoto() {
+
+  const photo =
+    document.getElementById(
+      'likePhoto'
+    );
+
+
+  const hint =
+    document.getElementById(
+      'clickHint'
+    );
+
+
+  const result =
+    document.getElementById(
+      'loveResult'
+    );
+
+
+  if (
+    photoSize >=
+    maxPhotoSize
+  )
+    return;
+
+
+  photoSize += 20;
+
+
+  if (
+    photoSize >
+    maxPhotoSize
+  ) {
+
+    photoSize =
+      maxPhotoSize;
+
+  }
+
+
+  photo.style.width =
+    photoSize + 'px';
+
+
+  photo.style.height =
+    photoSize + 'px';
+
+
+  if (
+    photoSize >=
+    maxPhotoSize &&
+    !explosionDone
+  ) {
+
+    explosionDone = true;
+
+
+    hint.innerText =
+      'AAAAA KAMUU SUKAA';
+
+
+    result.innerText =
+      'Makasih yaaa sayanggggggg 🥺💙';
+
+
+    createSparkleExplosion();
+
+  }
+
+}
+
+
+function resetPhoto() {
+
+  photoSize = 150;
+
+  explosionDone = false;
+
+
+  const photo =
+    document.getElementById(
+      'likePhoto'
+    );
+
+
+  const hint =
+    document.getElementById(
+      'clickHint'
+    );
+
+
+  const result =
+    document.getElementById(
+      'loveResult'
+    );
+
+
+  photo.style.width =
+    '150px';
+
+
+  photo.style.height =
+    '150px';
+
+
+  hint.innerText =
+    '🢁 Klik fotonya';
+
+
+  result.innerText =
+    '';
+
+
+  document.getElementById(
+    'sparkles'
+  ).innerHTML = '';
+
+}
+
+
+/* =====================================================
+   SPARKLE EXPLOSION
+===================================================== */
+
+function createSparkleExplosion() {
+
+  const container =
+    document.getElementById(
+      'sparkles'
+    );
+
+
+  const symbols = [
+
+    '✨',
+    '⭐',
+    '💙',
+    '💫',
+    '🌸',
+    '💙',
+    '🤍'
+
+  ];
+
+
+  for (
+    let i = 0;
+    i < 70;
+    i++
+  ) {
+
+    const sparkle =
+      document.createElement(
+        'span'
+      );
+
+
+    sparkle.className =
+      'sparkle';
+
+
+    sparkle.innerText =
+      symbols[
+        Math.floor(
+          Math.random() *
+          symbols.length
+        )
+      ];
+
+
+    const angle =
+      Math.random() *
+      Math.PI * 2;
+
+
+    const distance1 =
+      30 +
+      Math.random() * 40;
+
+
+    const distance2 =
+      100 +
+      Math.random() * 160;
+
+
+    const x1 =
+      Math.cos(angle) *
+      distance1;
+
+
+    const y1 =
+      Math.sin(angle) *
+      distance1;
+
+
+    const x2 =
+      Math.cos(angle) *
+      distance2;
+
+
+    const y2 =
+      Math.sin(angle) *
+      distance2;
+
+
+    sparkle.style.setProperty(
+      '--x1',
+      x1 + 'px'
+    );
+
+
+    sparkle.style.setProperty(
+      '--y1',
+      y1 + 'px'
+    );
+
+
+    sparkle.style.setProperty(
+      '--x2',
+      x2 + 'px'
+    );
+
+
+    sparkle.style.setProperty(
+      '--y2',
+      y2 + 'px'
+    );
+
+
+    sparkle.style.fontSize =
+      (
+        14 +
+        Math.random() * 20
+      ) + 'px';
+
+
+    sparkle.style.animationDelay =
+      (
+        Math.random() * 0.2
+      ) + 's';
+
+
+    container.appendChild(
+      sparkle
+    );
+
+
+    setTimeout(() => {
+
+      sparkle.remove();
+
+    },1700);
+
+  }
+
+}
+
+
+/* =====================================================
+   MUSIK
+===================================================== */
+
+const audio =
+  new Audio('musik.mp3');
+
+
+audio.loop = true;
+
+
+let isPlaying = false;
+
+
+function toggleMusic() {
+
+  const button =
+    document.getElementById(
+      'musicToggle'
+    );
+
+
+  if (isPlaying) {
+
+    audio.pause();
+
+    isPlaying = false;
+
+    button.innerText =
+      '▶ Play Musik';
+
+  } else {
+
+    audio.play();
+
+    isPlaying = true;
+
+    button.innerText =
+      '⏸️ Stop Musik';
+
+  }
+
+}
+
+
+/* =====================================================
+   BACKGROUND HEART
+===================================================== */
+
+const canvas =
+  document.getElementById(
+    'canvas'
+  );
+
+
+const ctx =
+  canvas.getContext('2d');
+
+
+function resizeCanvas() {
+
+  canvas.width =
+    window.innerWidth;
+
+  canvas.height =
+    window.innerHeight;
+
+}
+
+
+resizeCanvas();
+
+
+class Heart {
+
+  constructor() {
+
+    this.x =
+      Math.random() *
+      canvas.width;
+
+
+    this.y =
+      canvas.height +
+      Math.random() * 100;
+
+
+    this.size =
+      10 +
+      Math.random() * 20;
+
+
+    this.speed =
+      0.5 +
+      Math.random() * 1.5;
+
+
+    this.alpha =
+      0.5 +
+      Math.random() * 0.5;
+
+  }
+
+
+  draw() {
+
+    ctx.save();
+
+
+    ctx.translate(
+      this.x,
+      this.y
+    );
+
+
+    ctx.fillStyle =
+      `rgba(255,0,100,${this.alpha})`;
+
+
+    ctx.beginPath();
+
+
+    ctx.moveTo(
+      0,
+      -this.size / 2
+    );
+
+
+    ctx.bezierCurveTo(
+
+      this.size / 2,
+      -this.size,
+
+      this.size,
+      -this.size / 4,
+
+      0,
+      this.size
+
+    );
+
+
+    ctx.bezierCurveTo(
+
+      -this.size,
+      -this.size / 4,
+
+      -this.size / 2,
+      -this.size,
+
+      0,
+      -this.size / 2
+
+    );
+
+
+    ctx.closePath();
+
+
+    ctx.fill();
+
+
+    ctx.restore();
+
+  }
+
+
+  update() {
+
+    this.y -= this.speed;
+
+
+    if (
+      this.y < -50
+    ) {
+
+      this.y =
+        canvas.height + 50;
+
+
+      this.x =
+        Math.random() *
+        canvas.width;
+
+    }
+
+
+    this.draw();
+
+  }
+
+}
+
+
+const hearts = [];
+
+
+for (
+  let i = 0;
+  i < 40;
+  i++
+) {
+
+  hearts.push(
+    new Heart()
+  );
+
+}
+
+
+function animate() {
+
+  ctx.clearRect(
+
+    0,
+    0,
+    canvas.width,
+    canvas.height
+
+  );
+
+
+  hearts.forEach(
+    heart =>
+      heart.update()
+  );
+
+
+  requestAnimationFrame(
+    animate
+  );
+
+}
+
+
+animate();
+
+
+window.addEventListener(
+  'resize',
+  resizeCanvas
+);
+
+</script>
+
+
+<script>
+// Efek ombak pelan: setiap huruf judul bergerak sendiri dengan arah dan jeda acak.
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('h1').forEach((title) => {
+    const text = title.textContent;
+    title.textContent = '';
+
+    [...text].forEach((char) => {
+      const span = document.createElement('span');
+      span.className = 'wave-letter';
+      span.textContent = char;
+
+      // Jarak gerak kecil agar tetap slow dan lembut.
+      const distance = (Math.random() * 4 + 2).toFixed(1);
+      const direction = Math.random() > 0.5 ? 1 : -1;
+      span.style.setProperty('--wave-distance', `${(distance * direction).toFixed(1)}px`);
+
+      // Delay acak membuat gerakan tidak serempak.
+      const delay = (Math.random() * -2.8).toFixed(2);
+      span.style.animationDelay = `${delay}s`;
+
+      title.appendChild(span);
+    });
+  });
+});
+</script>
+
+</body>
+
+</html>
