@@ -1820,28 +1820,6 @@ function showFlowerEnding() {
 }
 
 
-/* FIX NAVIGASI SLIDE 10 */
-.nav-btns {
-  pointer-events: auto !important;
-  z-index: 100 !important;
-}
-
-.nav-btns .btn {
-  position: relative;
-  z-index: 101;
-  pointer-events: auto !important;
-  touch-action: manipulation;
-}
-
-#slide9 .nav-btns {
-  pointer-events: auto !important;
-  z-index: 200 !important;
-}
-
-#slide9 .nav-btns .btn {
-  pointer-events: auto !important;
-  z-index: 201 !important;
-}
 
 </style>
 
@@ -2516,8 +2494,7 @@ function showFlowerEnding() {
 
 
     <button class="btn"
-            type="button"
-            onclick="goToSlide10()">
+            onclick="nextSlide()">
 
       Lanjut ➡
 
@@ -2784,11 +2761,6 @@ function animateSlides(
 /* =====================================================
    NEXT / PREVIOUS
 ===================================================== */
-
-function goToSlide10() {
-  if (currentSlide !== 9) return;
-  animateSlides(9, 10);
-}
 
 function nextSlide() {
 
