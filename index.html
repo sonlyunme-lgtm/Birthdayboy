@@ -605,11 +605,25 @@ img {
 ===================================================== */
 
 #slide2 .content,
-#slide3 .content {
-  justify-content: flex-start;
-  align-items: center;
-  text-align: center;
+#slide3 .content,
+#slide9 .content {
+  justify-content: flex-start !important;
+  align-items: center !important;
+  text-align: center !important;
   padding-top: 30px;
+  padding-left: 25px;
+  padding-right: 25px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#slide2 .content > *,
+#slide3 .content > *,
+#slide9 .content > * {
+  margin-left: auto;
+  margin-right: auto;
+  align-self: center;
 }
 
 
