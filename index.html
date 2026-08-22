@@ -605,25 +605,11 @@ img {
 ===================================================== */
 
 #slide2 .content,
-#slide3 .content,
-#slide9 .content {
-  justify-content: flex-start !important;
-  align-items: center !important;
-  text-align: center !important;
+#slide3 .content {
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
   padding-top: 30px;
-  padding-left: 25px;
-  padding-right: 25px;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#slide2 .content > *,
-#slide3 .content > *,
-#slide9 .content > * {
-  margin-left: auto;
-  margin-right: auto;
-  align-self: center;
 }
 
 
@@ -1313,6 +1299,32 @@ img {
 
   }
 
+}
+
+
+/* FIX FINAL - SLIDE 2, 3, 9 */
+#slide2 .content,
+#slide3 .content,
+#slide9 .content {
+  transform: translateX(-12px);
+}
+
+#slide2 h1,
+#slide3 h1,
+#slide9 h1 {
+  font-size: 22px;
+}
+
+#slide2 p,
+#slide3 p,
+#slide9 p {
+  font-size: 13px;
+}
+
+#slide2 img,
+#slide3 img,
+#slide9 img {
+  max-width: 68%;
 }
 
 </style>
