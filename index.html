@@ -1199,291 +1199,6 @@ img {
 }
 
 
-
-/* =====================================================
-   MINI GAMES
-===================================================== */
-
-function goToMiniGames() {
-  animateSlides(currentSlide, 11);
-}
-
-
-const quizData = [
-  {
-    q: 'Makanan favorit aku apa?',
-    a: ['Bakso', 'Seblak', 'Sushi', 'Mie Ayam'],
-    correct: 1
-  },
-  {
-    q: 'Minuman kesukaan aku?',
-    a: ['Matcha', 'Kopi', 'Cokelat', 'Teh Manis'],
-    correct: 0
-  },
-  {
-    q: 'Warna kesukaan aku?',
-    a: ['Biru', 'Ungu', 'Pink', 'Hitam'],
-    correct: 2
-  },
-  {
-    q: 'Hewan kesukaan aku?',
-    a: ['Kelinci', 'Kucing', 'Hamster', 'Anjing'],
-    correct: 1
-  },
-  {
-    q: 'Hobi aku apa?',
-    a: ['Memasak', 'Menggambar', 'Menyanyi', 'Olahraga'],
-    correct: 1
-  },
-  {
-    q: 'Aku paling suka dipanggil...',
-    a: ['Sayang', 'Bby', 'Baby', 'Cantik'],
-    correct: 2
-  },
-  {
-    q: 'Kalau lagi santai, kebiasaan aku...',
-    a: ['Scroll TikTok', 'Tidur', 'Main game', 'Baca buku'],
-    correct: 0
-  },
-  {
-    q: 'Hal yang aku suka dari kamu adalah...',
-    a: ['Senyummu', 'Perhatianmu', 'Cara kamu ngobrol', 'Semuanya benar 💙'],
-    correct: 3
-  },
-  {
-    q: 'Hal yang paling aku nggak suka dari kamu?',
-    a: ['Lupa chat', 'Ngomong kasar', 'Main game', 'Terlalu lama tidur'],
-    correct: 1
-  },
-  {
-    q: 'Hero Mobile Legends favorit aku?',
-    a: ['Xavier', 'Layla', 'Miya', 'Gusion'],
-    correct: 0
-  }
-];
-
-let quizIndex = 0;
-let quizScore = 0;
-let quizLocked = false;
-
-function startQuiz() {
-  quizIndex = 0;
-  quizScore = 0;
-  quizLocked = false;
-  const result = document.getElementById('quizResult');
-  if (result) result.style.display = 'none';
-  renderQuizQuestion();
-}
-
-function renderQuizQuestion() {
-  const q = quizData[quizIndex];
-  const progress = document.getElementById('quizProgress');
-  const question = document.getElementById('quizQuestion');
-  const options = document.getElementById('quizOptions');
-  const feedback = document.getElementById('quizFeedback');
-
-  quizLocked = false;
-  progress.innerText = `Pertanyaan ${quizIndex + 1} / ${quizData.length}`;
-  question.innerText = q.q;
-  feedback.innerText = '';
-  options.innerHTML = '';
-
-  q.a.forEach((text, i) => {
-    const button = document.createElement('button');
-    button.className = 'quiz-option';
-    button.innerText = `${String.fromCharCode(65 + i)}. ${text}`;
-    button.onclick = () => answerQuiz(i, button);
-    options.appendChild(button);
-  });
-}
-
-function answerQuiz(selected, selectedButton) {
-  if (quizLocked) return;
-  quizLocked = true;
-
-  const q = quizData[quizIndex];
-  const buttons = document.querySelectorAll('#quizOptions .quiz-option');
-  buttons.forEach((button, i) => {
-    button.disabled = true;
-    if (i === q.correct) button.classList.add('correct');
-  });
-
-  const feedback = document.getElementById('quizFeedback');
-
-  if (selected === q.correct) {
-    quizScore++;
-    selectedButton.classList.add('correct');
-    feedback.innerText = 'BENERRR 😭💙 Kamu kenal aku banget!';
-  } else {
-    selectedButton.classList.add('wrong');
-    feedback.innerText = 'Hehe salahhh 😭 Jawaban yang benar sudah aku kasih warna hijau.';
-  }
-
-  setTimeout(() => {
-    quizIndex++;
-    if (quizIndex < quizData.length) {
-      renderQuizQuestion();
-    } else {
-      showQuizResult();
-    }
-  }, 900);
-}
-
-function showQuizResult() {
-  document.getElementById('quizProgress').innerText = 'Selesai!';
-  document.getElementById('quizQuestion').style.display = 'none';
-  document.getElementById('quizOptions').style.display = 'none';
-  document.getElementById('quizFeedback').style.display = 'none';
-
-  const result = document.getElementById('quizResult');
-  result.style.display = 'block';
-
-  let message = '';
-  if (quizScore === 10) {
-    message = 'PERFECT! 😭💙 Kamu bener-bener hafal aku!';
-  } else if (quizScore >= 8) {
-    message = 'WAAA kamu kenal aku banget! 🥺💙';
-  } else if (quizScore >= 5) {
-    message = 'Lumayan nihhh, masih harus lebih kenal aku 😭';
-  } else {
-    message = 'KOK BISA SALAH BANYAK 😭 Ayo kenalan lagi sama aku!';
-  }
-
-  result.innerHTML = `
-    <strong>Skor kamu: ${quizScore}/10</strong><br><br>
-    ${message}<br><br>
-    <button class="btn" onclick="goToCatchGame()">💙 Lanjut Tangkap Hati</button>
-  `;
-}
-
-function goToCatchGame() {
-  document.getElementById('quizQuestion').style.display = '';
-  document.getElementById('quizOptions').style.display = '';
-  document.getElementById('quizFeedback').style.display = '';
-  animateSlides(currentSlide, 12);
-}
-
-
-let catchTimer = null;
-let catchSpawner = null;
-let catchScore = 0;
-let catchTime = 30;
-let catchRunning = false;
-
-function startCatchGame() {
-  clearInterval(catchTimer);
-  clearInterval(catchSpawner);
-  catchScore = 0;
-  catchTime = 30;
-  catchRunning = true;
-
-  const area = document.getElementById('catchArea');
-  area.innerHTML = '';
-  document.getElementById('catchScore').innerText = '0';
-  document.getElementById('catchTime').innerText = '30';
-  document.getElementById('catchMessage').innerText = 'Ayo tangkap sebanyak-banyaknya! 💙';
-
-  spawnCatchHeart();
-  catchSpawner = setInterval(spawnCatchHeart, 650);
-
-  catchTimer = setInterval(() => {
-    catchTime--;
-    document.getElementById('catchTime').innerText = catchTime;
-    if (catchTime <= 0) finishCatchGame();
-  }, 1000);
-}
-
-function spawnCatchHeart() {
-  if (!catchRunning) return;
-
-  const area = document.getElementById('catchArea');
-  const heart = document.createElement('div');
-  const bad = Math.random() < 0.28;
-
-  heart.className = 'catch-heart';
-  heart.innerText = bad ? '💔' : '💙';
-  heart.dataset.bad = bad ? '1' : '0';
-
-  const maxX = Math.max(0, area.clientWidth - 48);
-  const maxY = Math.max(0, area.clientHeight - 48);
-  heart.style.left = Math.random() * maxX + 'px';
-  heart.style.top = Math.random() * maxY + 'px';
-
-  heart.onclick = () => {
-    if (!catchRunning) return;
-    if (heart.dataset.bad === '1') {
-      catchScore = Math.max(0, catchScore - 1);
-      document.getElementById('catchMessage').innerText = 'EH JANGAN YANG 💔 😭';
-    } else {
-      catchScore++;
-      document.getElementById('catchMessage').innerText = 'DAPETTT 💙✨';
-    }
-    document.getElementById('catchScore').innerText = catchScore;
-    heart.remove();
-  };
-
-  area.appendChild(heart);
-  setTimeout(() => heart.remove(), 1300);
-}
-
-function finishCatchGame() {
-  if (!catchRunning) return;
-  catchRunning = false;
-  clearInterval(catchTimer);
-  clearInterval(catchSpawner);
-  document.getElementById('catchArea').innerHTML = '';
-
-  const message = document.getElementById('catchMessage');
-  message.innerText = `Selesai! Skor kamu ${catchScore} 💙🌸`;
-
-  setTimeout(showFlowerEnding, 1200);
-}
-
-function showFlowerEnding() {
-  const ending = document.getElementById('flowerEnding');
-  const field = document.getElementById('flowerField');
-  field.innerHTML = '';
-
-  /*
-    NAMA FILE BUNGA YANG HARUS KAMU SIMPAN DI FOLDER YANG SAMA DENGAN HTML:
-    bunga1.png sampai bunga8.png
-  */
-  const flowerSources = [
-    'bunga1.png',
-    'bunga2.png',
-    'bunga3.png',
-    'bunga4.png',
-    'bunga5.png',
-    'bunga6.png',
-    'bunga7.png',
-    'bunga8.png'
-  ];
-
-  const positions = [
-    [-55,-45], [0,-52], [52,-42],
-    [-60,0], [58,4],
-    [-48,45], [4,52], [54,46],
-    [-28,-18], [30,20], [0,0]
-  ];
-
-  ending.classList.add('show');
-  ending.setAttribute('aria-hidden', 'false');
-
-  positions.forEach((pos, i) => {
-    const img = document.createElement('img');
-    img.className = 'flower-piece';
-    img.src = flowerSources[i % flowerSources.length];
-    img.alt = '';
-    img.style.left = '50%';
-    img.style.top = '50%';
-    img.style.setProperty('--sx', `${pos[0]}vw`);
-    img.style.setProperty('--sy', `${pos[1]}vh`);
-    img.style.setProperty('--rot', `${(i % 2 ? 1 : -1) * (8 + i * 2)}deg`);
-    img.style.animationDelay = `${i * 0.12}s`;
-    field.appendChild(img);
-  });
-}
-
 /* =====================================================
    MUSIK
 ===================================================== */
@@ -2589,7 +2304,7 @@ function showFlowerEnding() {
 <div class="slide" id="slide11">
   <div class="content game-content">
     <h1>🎯 Tebak Aku</h1>
-    <p>Seberapa kenal kamu sama aku? 😭💙</p>
+    <p>Seberapa kenal kamu sama aku?(˶˃𐃷˂˶)💙</p>
 
     <div class="quiz-box">
       <div id="quizProgress" class="quiz-progress"></div>
@@ -3176,7 +2891,7 @@ function startFallingEmojis() {
     '💙',
     '🤍',
     '💙',
-    '🌸',
+    '🤍',
     '✨',
     '💫'
 
@@ -3265,8 +2980,8 @@ function startHeartRain() {
     '🤍',
     '✨',
     '✨',
-    '🌸',
-    '🌸',
+    '🤍',
+    '💙',
     '💫'
 
   ];
@@ -3496,7 +3211,7 @@ function createSparkleExplosion() {
     '⭐',
     '💙',
     '💫',
-    '🌸',
+    '💙',
     '💙',
     '🤍'
 
@@ -3613,6 +3328,291 @@ function createSparkleExplosion() {
 
   }
 
+}
+
+
+/* =====================================================
+   MINI GAMES
+===================================================== */
+
+function goToMiniGames() {
+  animateSlides(currentSlide, 11);
+}
+
+
+const quizData = [
+  {
+    q: 'Makanan favorit aku apa?',
+    a: ['Bakso', 'Seblak', 'Sushi', 'Mie Ayam'],
+    correct: 1
+  },
+  {
+    q: 'Minuman kesukaan aku?',
+    a: ['Matcha', 'Kopi', 'Cokelat', 'strawberry milkshake'],
+    correct: 0
+  },
+  {
+    q: 'Warna kesukaan aku?',
+    a: ['Biru', 'Ungu', 'Pink', 'Hitam'],
+    correct: 2
+  },
+  {
+    q: 'Hewan kesukaan aku?',
+    a: ['Kelinci', 'Kucing', 'Hamster', 'Anjing'],
+    correct: 1
+  },
+  {
+    q: 'Hobi aku apa?',
+    a: ['Memasak', 'Menggambar', 'Menyanyi', 'Olahraga'],
+    correct: 1
+  },
+  {
+    q: 'Aku paling suka dipanggil...',
+    a: ['Sayang', 'woy!', 'Baby', 'Cantik'],
+    correct: 2
+  },
+  {
+    q: 'Kalau lagi santai, kebiasaan aku...',
+    a: ['Scroll TikTok', 'Tidur', 'Main game', 'Baca buku'],
+    correct: 0
+  },
+  {
+    q: 'Hal yang aku suka dari kamu adalah...',
+    a: ['Senyum kamu', 'ganteng', 'Cara kamu ngobrol', 'Semuanya benar 💙'],
+    correct: 3
+  },
+  {
+    q: 'Hal yang paling aku nggak suka dari kamu?',
+    a: ['Lupa chat', 'Ngomong kasar', 'Main game', 'Terlalu lama tidur'],
+    correct: 1
+  },
+  {
+    q: 'Hero Mobile Legends favorit aku?',
+    a: ['Xavier', 'benedetta', 'angela', 'kagura'],
+    correct: 0
+  }
+];
+
+let quizIndex = 0;
+let quizScore = 0;
+let quizLocked = false;
+
+function startQuiz() {
+  quizIndex = 0;
+  quizScore = 0;
+  quizLocked = false;
+  const result = document.getElementById('quizResult');
+  if (result) result.style.display = 'none';
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+  const q = quizData[quizIndex];
+  const progress = document.getElementById('quizProgress');
+  const question = document.getElementById('quizQuestion');
+  const options = document.getElementById('quizOptions');
+  const feedback = document.getElementById('quizFeedback');
+
+  quizLocked = false;
+  progress.innerText = `Pertanyaan ${quizIndex + 1} / ${quizData.length}`;
+  question.innerText = q.q;
+  feedback.innerText = '';
+  options.innerHTML = '';
+
+  q.a.forEach((text, i) => {
+    const button = document.createElement('button');
+    button.className = 'quiz-option';
+    button.innerText = `${String.fromCharCode(65 + i)}. ${text}`;
+    button.onclick = () => answerQuiz(i, button);
+    options.appendChild(button);
+  });
+}
+
+function answerQuiz(selected, selectedButton) {
+  if (quizLocked) return;
+  quizLocked = true;
+
+  const q = quizData[quizIndex];
+  const buttons = document.querySelectorAll('#quizOptions .quiz-option');
+  buttons.forEach((button, i) => {
+    button.disabled = true;
+    if (i === q.correct) button.classList.add('correct');
+  });
+
+  const feedback = document.getElementById('quizFeedback');
+
+  if (selected === q.correct) {
+    quizScore++;
+    selectedButton.classList.add('correct');
+    feedback.innerText = 'BENERRR💙 gg banget ayangg';
+  } else {
+    selectedButton.classList.add('wrong');
+    feedback.innerText = 'ihhhh masa gatau sihh(` ᴖ ´)!!';
+  }
+
+  setTimeout(() => {
+    quizIndex++;
+    if (quizIndex < quizData.length) {
+      renderQuizQuestion();
+    } else {
+      showQuizResult();
+    }
+  }, 900);
+}
+
+function showQuizResult() {
+  document.getElementById('quizProgress').innerText = 'Selesai!';
+  document.getElementById('quizQuestion').style.display = 'none';
+  document.getElementById('quizOptions').style.display = 'none';
+  document.getElementById('quizFeedback').style.display = 'none';
+
+  const result = document.getElementById('quizResult');
+  result.style.display = 'block';
+
+  let message = '';
+  if (quizScore === 10) {
+    message = 'PERFECT! ga nyangka💙 Kamu bener-bener hafal aku!';
+  } else if (quizScore >= 8) {
+    message = 'WAAA kamu kamuuu tau aku bgtt!💙';
+  } else if (quizScore >= 5) {
+    message = 'not bad laaa, hebat kamuu..';
+  } else {
+    message = 'KOK BISA SALAH BANYAK 😭 Ayo kenalan lagi sama aku(` ᴖ ´)!';
+  }
+
+  result.innerHTML = `
+    <strong>Skor kamu: ${quizScore}/10</strong><br><br>
+    ${message}<br><br>
+    <button class="btn" onclick="goToCatchGame()">💙 Lanjut Tangkap Hati</button>
+  `;
+}
+
+function goToCatchGame() {
+  document.getElementById('quizQuestion').style.display = '';
+  document.getElementById('quizOptions').style.display = '';
+  document.getElementById('quizFeedback').style.display = '';
+  animateSlides(currentSlide, 12);
+}
+
+
+let catchTimer = null;
+let catchSpawner = null;
+let catchScore = 0;
+let catchTime = 30;
+let catchRunning = false;
+
+function startCatchGame() {
+  clearInterval(catchTimer);
+  clearInterval(catchSpawner);
+  catchScore = 0;
+  catchTime = 30;
+  catchRunning = true;
+
+  const area = document.getElementById('catchArea');
+  area.innerHTML = '';
+  document.getElementById('catchScore').innerText = '0';
+  document.getElementById('catchTime').innerText = '30';
+  document.getElementById('catchMessage').innerText = 'Ayo tangkap sebanyak-banyaknya! 💙';
+
+  spawnCatchHeart();
+  catchSpawner = setInterval(spawnCatchHeart, 650);
+
+  catchTimer = setInterval(() => {
+    catchTime--;
+    document.getElementById('catchTime').innerText = catchTime;
+    if (catchTime <= 0) finishCatchGame();
+  }, 1000);
+}
+
+function spawnCatchHeart() {
+  if (!catchRunning) return;
+
+  const area = document.getElementById('catchArea');
+  const heart = document.createElement('div');
+  const bad = Math.random() < 0.28;
+
+  heart.className = 'catch-heart';
+  heart.innerText = bad ? '💔' : '💙';
+  heart.dataset.bad = bad ? '1' : '0';
+
+  const maxX = Math.max(0, area.clientWidth - 48);
+  const maxY = Math.max(0, area.clientHeight - 48);
+  heart.style.left = Math.random() * maxX + 'px';
+  heart.style.top = Math.random() * maxY + 'px';
+
+  heart.onclick = () => {
+    if (!catchRunning) return;
+    if (heart.dataset.bad === '1') {
+      catchScore = Math.max(0, catchScore - 1);
+      document.getElementById('catchMessage').innerText = 'EH JANGAN YANG 💔 😭';
+    } else {
+      catchScore++;
+      document.getElementById('catchMessage').innerText = 'DAPETTT 💙✨';
+    }
+    document.getElementById('catchScore').innerText = catchScore;
+    heart.remove();
+  };
+
+  area.appendChild(heart);
+  setTimeout(() => heart.remove(), 1300);
+}
+
+function finishCatchGame() {
+  if (!catchRunning) return;
+  catchRunning = false;
+  clearInterval(catchTimer);
+  clearInterval(catchSpawner);
+  document.getElementById('catchArea').innerHTML = '';
+
+  const message = document.getElementById('catchMessage');
+  message.innerText = `Selesai! Skor kamu ${catchScore} 💙🌸`;
+
+  setTimeout(showFlowerEnding, 1200);
+}
+
+function showFlowerEnding() {
+  const ending = document.getElementById('flowerEnding');
+  const field = document.getElementById('flowerField');
+  field.innerHTML = '';
+
+  /*
+    NAMA FILE BUNGA YANG HARUS KAMU SIMPAN DI FOLDER YANG SAMA DENGAN HTML:
+    bunga1.png sampai bunga8.png
+  */
+  const flowerSources = [
+    'bunga1.png',
+    'bunga2.png',
+    'bunga3.png',
+    'bunga4.png',
+    'bunga5.png',
+    'bunga6.png',
+    'bunga7.png',
+    'bunga8.png'
+  ];
+
+  const positions = [
+    [-55,-45], [0,-52], [52,-42],
+    [-60,0], [58,4],
+    [-48,45], [4,52], [54,46],
+    [-28,-18], [30,20], [0,0]
+  ];
+
+  ending.classList.add('show');
+  ending.setAttribute('aria-hidden', 'false');
+
+  positions.forEach((pos, i) => {
+    const img = document.createElement('img');
+    img.className = 'flower-piece';
+    img.src = flowerSources[i % flowerSources.length];
+    img.alt = '';
+    img.style.left = '50%';
+    img.style.top = '50%';
+    img.style.setProperty('--sx', `${pos[0]}vw`);
+    img.style.setProperty('--sy', `${pos[1]}vh`);
+    img.style.setProperty('--rot', `${(i % 2 ? 1 : -1) * (8 + i * 2)}deg`);
+    img.style.animationDelay = `${i * 0.12}s`;
+    field.appendChild(img);
+  });
 }
 
 
